@@ -25,12 +25,13 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav ms-auto navbar-ml">
             <a class="nav-link" href="{% url 'home.about' %}">About</a>
+              <a class="nav-link" href=
+              "{% url 'movies.index' %}">Movies</a>
           </div>
         </div>
       </div>
     </nav>
     <!-- Header -->
-
     <div>
       {% block content %}
       {% endblock content %}
@@ -58,15 +59,18 @@
             <p><i class="fas fa-home me-2"></i> 150-2345 Tokyo-to, Japan</p>
             <p><i class="fas fa-envelope me-2"></i> info@moviesstore.com</p>
             <p><i class="fas fa-phone me-2"></i> +81 03-3333-3333</p>
+
           </div>
         </div>
       </div>
     </section>
     <section class="p-3 ms-footer-bottom bg-dark">
+
       <div class="container d-flex justify-content-between">
         <div class="me-5 text-white">
           <span>DESIGNED BY <a href="https://www.x.com/danielgarax" target="_blank">DANIEL CORREA</a> &
             <a href="https://www.x.com/greglim81" target="_blank">GREG LIM</a>
+
           </span>
         </div>
         <div class="text-white">
