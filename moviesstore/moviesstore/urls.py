@@ -1,6 +1,3 @@
-"""
-URL configuration for moviesstore project.
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
 Examples:
@@ -25,4 +22,3 @@ urlpatterns = [
     #path('cart/', include('cart.urls')),
    # path('accounts/', include('accounts.urls')),
 ]
-
