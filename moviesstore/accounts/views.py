@@ -71,23 +71,23 @@ def reset_password(request):
             new_password = form.cleaned_data['new_password']
 
             try:
-                # Get user by username
+                #retreive username
                 user = User.objects.get(username=username)
 
-                # Hash the new password
+                # hash new password
                 user.password = make_password(new_password)
                 user.save()  # Save the user with the new password
 
-                # Success message
+                # send a success message
                 messages.success(request, 'Password reset successfully. You can now log in.')
-                return redirect('accounts.password_reset_done')  # Redirect to a success page or login page
+                return redirect('accounts.password_reset_done')  # redirect to a success page
 
             except User.DoesNotExist:
-                # Error message if user doesn't exist
+                # send error message if user not found
                 messages.error(request, 'User not found.')
 
         else:
-            # Error message for invalid form submission
+            # error if improper request
             messages.error(request, 'Invalid form submission.')
     else:
         form = CustomPasswordResetForm()
@@ -110,8 +110,8 @@ def reset_request_view(request):
         user = User.objects.filter(username=username).first()
 
         if user:
-            token = get_random_string(32)  # Generate secure reset token
-            reset_tokens[token] = username  # Store token (should use DB in real app)
+            token = get_random_string(32)  # generate token
+            reset_tokens[token] = username  # store token
             return redirect('reset_password', token=token)
         else:
             messages.error(request, "Username not found!")
