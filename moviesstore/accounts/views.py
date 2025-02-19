@@ -4,8 +4,12 @@ from .forms import CustomUserCreationForm, CustomErrorList
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-
-
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.hashers import check_password, make_password
+from django.contrib import messages
+from django.utils.crypto import get_random_string
+from django.contrib.auth import views as auth_views
+from .forms import CustomPasswordResetForm
 
 @login_required
 def logout(request):
@@ -17,7 +21,7 @@ def login(request):
     template_data['title'] = 'Login'
     if request.method == 'GET':
         return render(request, 'accounts/login.html',
-            {'template_data': template_data})
+                      {'template_data': template_data})
     elif request.method == 'POST':
         user = authenticate(
             request,
@@ -27,17 +31,18 @@ def login(request):
         if user is None:
             template_data['error'] = 'The username or password is incorrect.'
             return render(request, 'accounts/login.html',
-                {'template_data': template_data})
+                          {'template_data': template_data})
         else:
             auth_login(request, user)
             return redirect('home.index')
+
 def signup(request):
     template_data = {}
     template_data['title'] = 'Sign Up'
     if request.method == 'GET':
         template_data['form'] = CustomUserCreationForm()
         return render(request, 'accounts/signup.html',
-            {'template_data': template_data})
+                      {'template_data': template_data})
     elif request.method == 'POST':
         form = CustomUserCreationForm(request.POST, error_class=CustomErrorList)
         if form.is_valid():
@@ -54,21 +59,10 @@ def orders(request):
     template_data['title'] = 'Orders'
     template_data['orders'] = request.user.order_set.all()
     return render(request, 'accounts/orders.html',
-        {'template_data': template_data})
-
-
-from .forms import CustomPasswordResetForm
-from django.contrib.auth.hashers import make_password
+                  {'template_data': template_data})
 
 
 # accounts/views.py
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
-from django.contrib import messages
-from .forms import CustomPasswordResetForm
-
-
 def reset_password(request):
     if request.method == 'POST':
         form = CustomPasswordResetForm(request.POST)
@@ -102,23 +96,12 @@ def reset_password(request):
 
 
 # accounts/views.py
-from django.contrib.auth import views as auth_views
-from .forms import CustomPasswordResetForm
-
 class CustomPasswordResetView(auth_views.PasswordResetView):
     template_name = 'registration/password_reset_form.html'
     form_class = CustomPasswordResetForm
-    success_url = 'password_reset_done'  # Redirect after a successful password reset request
+    success_url = 'password_reset_done'
 
 
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
-from django.contrib import messages
-from django.utils.crypto import get_random_string
-from django.contrib.auth.hashers import check_password, make_password
-
-# Temporary token storage (consider using a model for production)
 reset_tokens = {}
 
 def reset_request_view(request):
@@ -135,11 +118,7 @@ def reset_request_view(request):
 
     return render(request, 'accounts/reset_request.html')
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import check_password, make_password
-from django.contrib import messages
-
+#reset password
 def reset_password_view(request, token):
     if token not in reset_tokens:
         messages.error(request, "Invalid or expired token!")
@@ -152,7 +131,7 @@ def reset_password_view(request, token):
         new_password = request.POST.get('new_password')
         confirm_password = request.POST.get('confirm_password')
 
-        # Password validation
+        # make sure password abides by restrictions
         if len(new_password) < 8:
             messages.error(request, "Password must be at least 8 characters long.")
         elif check_password(new_password, user.password):
@@ -160,15 +139,14 @@ def reset_password_view(request, token):
         elif new_password != confirm_password:
             messages.error(request, "Passwords do not match.")
         else:
-            # Save the new password
+            # save new password
             user.password = make_password(new_password)
             user.save()
 
-            # Remove the token after a successful reset
+            # remove token if password successfully reset
             del reset_tokens[token]
 
             messages.success(request, "Password successfully reset! Please log in.")
             return redirect('accounts.login')
 
     return render(request, 'accounts/reset_password.html', {'token': token})
-
