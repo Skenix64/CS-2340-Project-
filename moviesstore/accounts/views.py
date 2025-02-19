@@ -59,24 +59,6 @@ def orders(request):
 
 from .forms import CustomPasswordResetForm
 from django.contrib.auth.hashers import make_password
-# accounts/views.py
-# def resetpassword(request):
-#     if request.method == 'POST':
-#         form = CustomPasswordResetForm(request.POST)
-#         if form.is_valid():
-#             username = form.cleaned_data['username']
-#             new_password = form.cleaned_data['new_password']
-#
-#         # Update the user's password
-#         try: user = User.objects.get(username=username)
-#         user.password = make_password(new_password)
-#         user.save() messages.success(request, 'Password reset successfully. You can now log in.')
-#         return redirect('accounts.password_reset')
-#         except User.DoesNotExist: messages.error(request, 'User not found.')
-#         else:
-#         messages.error(request, 'Invalid form submission.')
-#         else: form = CustomPasswordResetForm()
-#         return render(request, 'accounts/password_reset.html', {'form': form})
 
 
 # accounts/views.py
@@ -152,35 +134,6 @@ def reset_request_view(request):
             messages.error(request, "Username not found!")
 
     return render(request, 'accounts/reset_request.html')
-
-
-# def reset_password_view(request, token):
-#     if token not in reset_tokens:
-#         messages.error(request, "Invalid or expired token!")
-#         return redirect('reset_request')
-#
-#     username = reset_tokens[token]
-#     user = get_object_or_404(User, username=username)
-#
-#     if request.method == 'POST':
-#         new_password = request.POST.get('new_password')
-#         confirm_password = request.POST.get('confirm_password')
-#
-#         # Password validation
-#         if len(new_password) < 8:
-#             messages.error(request, "Password must be at least 8 characters long!")
-#         elif check_password(new_password, user.password):
-#             messages.error(request, "New password cannot be the same as the old password!")
-#         elif new_password != confirm_password:
-#             messages.error(request, "Passwords do not match!")
-#         else:
-#             user.password = make_password(new_password)
-#             user.save()
-#             del reset_tokens[token]  # Remove token after reset
-#             messages.success(request, "Password successfully reset! Please log in.")
-#             return redirect('login')
-#
-#     return render(request, 'accounts/reset_password.html')
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
