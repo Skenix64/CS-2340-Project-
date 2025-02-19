@@ -34,11 +34,11 @@ class CustomPasswordResetForm(forms.Form):
         new_password = cleaned_data.get("new_password")
         confirm_password = cleaned_data.get("confirm_password")
 
-        # Check if the username exists
+        # check if username exists
         if not User.objects.filter(username=username).exists():
             raise ValidationError("No user found with this username.")
 
-        # Check if passwords match
+        # check if passwords match
         if new_password != confirm_password:
             raise ValidationError("Passwords do not match.")
 

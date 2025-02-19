@@ -80,7 +80,7 @@ def reset_password(request):
 
                 # send a success message
                 messages.success(request, 'Password reset successfully. You can now log in.')
-                return redirect('accounts.password_reset_done')  # Redirect to a success page or login page
+                return redirect('accounts.password_reset_done')  # redirect to a success page
 
             except User.DoesNotExist:
                 # send error message if user not found
