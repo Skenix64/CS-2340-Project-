@@ -135,3 +135,13 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+#EMAIL BACKEND TO SETUP GMAIL
+# For production (send real emails)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'matthewjason800@gmail.com'  # Replace with your Gmail address
+EMAIL_HOST_PASSWORD = 'Mathai123'  # Replace with your Gmail password
+DEFAULT_FROM_EMAIL = 'matthewjason800@gmail.com'  # Default from email address (can be anything)
